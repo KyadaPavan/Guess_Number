@@ -2,4 +2,4 @@ It is number guessing game, in which the computer will generate any random numbe
 
 You will get only 10 chance to guess the correct number.
 
-You can play game guess-number-lyart.vercel.app here.
+You can play game https://guess-number-lyart.vercel.app/ here.
