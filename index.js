@@ -1,3 +1,6 @@
+
+
+
 const randomnum = Math.floor((Math.random() * 100) + 1);
 
 let submit = document.querySelector(".submit")
@@ -5,7 +8,8 @@ let userinput = document.querySelector(".guessfield")
 let startover = document.querySelector(".result")
 let remaning = document.querySelector(".remainingguess")
 let guessslot = document.querySelector(".previousguess")
-let highorlow = document.querySelector(".highorlow")    
+let highorlow = document.querySelector(".highorlow")   
+let againButton = document.getElementById('againButton'); 
 
 
 let p = document.createElement('p')
@@ -78,11 +82,24 @@ function diaplayMessage(message){
 function endGame(){
     userinput.value = ''
     userinput.setAttribute('disabled' , '')
-    p.classList.add('button')
-    p.innerHTML = `<button id="newgame">Start New Game</button>`
+ 
 
     startover.appendChild(p)
     playgame = false
+
+    againButton.addEventListener('click', function(){
+        location.href ="\Learining Java Script\guess_number.html"
+      })
 }
+
+
+
+
+
+
+
+
+
+
 
 
