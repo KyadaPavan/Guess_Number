@@ -1,105 +1,74 @@
-
-
-
-const randomnum = Math.floor((Math.random() * 100) + 1);
-
-let submit = document.querySelector(".submit")
-let userinput = document.querySelector(".guessfield")
-let startover = document.querySelector(".result")
-let remaning = document.querySelector(".remainingguess")
-let guessslot = document.querySelector(".previousguess")
-let highorlow = document.querySelector(".highorlow")   
-let againButton = document.getElementById('againButton'); 
-
-
-let p = document.createElement('p')
-
-let previousguess = []
-let numguess = 1
-let playgame = true;
-
-if(playgame){
-    submit.addEventListener('click' , function(e){
-        e.preventDefault();
-        const guess = parseInt(userinput.value);
-        validateGuess(guess);
-    })
-}
-
-function validateGuess(guess){
-
-    if(isNaN(guess)){
-        alert('Please Enter a valid Number')
+// Section and hero reveal on scroll
+const animatedEls = document.querySelectorAll('.animated');
+const observer = new IntersectionObserver((entries, obs) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      obs.unobserve(entry.target);
     }
-    else if(guess < 1){
-        alert('Please Enter a Number grater than 1')
+  });
+}, { threshold: 0.15 });
+animatedEls.forEach(el => observer.observe(el));
+
+// Parallax effect for hero background
+const hero = document.querySelector('.hero');
+window.addEventListener('scroll', () => {
+  if (!hero) return;
+  const scrolled = window.scrollY;
+  hero.style.backgroundPosition = `center ${scrolled * 0.3}px`;
+});
+
+// Staggered gallery item reveal
+const galleryItems = document.querySelectorAll('.gallery-item');
+const galleryObs = new IntersectionObserver((entries, obs) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => {
+        entry.target.classList.add('visible');
+      }, i * 120);
+      obs.unobserve(entry.target);
     }
-    else if(guess > 100){
-        alert('Please Enter a Number smaller than 100')
+  });
+}, { threshold: 0.1 });
+galleryItems.forEach(item => {
+  item.classList.add('animated');
+  galleryObs.observe(item);
+});
+
+// Smooth scroll for nav links
+const navLinks = document.querySelectorAll('nav ul li a');
+navLinks.forEach(link => {
+  link.addEventListener('click', function (e) {
+    const href = this.getAttribute('href');
+    if (href.startsWith('#')) {
+      e.preventDefault();
+      const target = document.querySelector(href);
+      if (target) {
+        window.scrollTo({
+          top: target.offsetTop - 60,
+          behavior: 'smooth'
+        });
+      }
     }
-    else{
-        previousguess.push(guess)
+  });
+});
 
-        if(numguess == 11){
-            displayGuesses(guess)
-            diaplayMessage(`Game Over! The Number Was ${randomnum}`)
-            endGame()
-        }
-        else{
-            displayGuesses(guess)
-            checkGuesses(guess)
-        }
-
-    }
-
+// Interactive tilt effect for gallery items
+function handleTilt(e) {
+  const card = this;
+  const rect = card.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const xc = rect.width / 2;
+  const yc = rect.height / 2;
+  const dx = (x - xc) / xc;
+  const dy = (y - yc) / yc;
+  card.style.transform = `rotateY(${dx * 7}deg) rotateX(${-dy * 7}deg) scale(1.04)`;
 }
-
-function checkGuesses(guess){
-    if(guess === randomnum){
-
-        diaplayMessage(`You Guessed Correctly!`)
-        endGame()
-    }
-    else if(guess<randomnum){
-        diaplayMessage(`Please, Guess a Bigger Number`)
-    }
-    else if(guess>randomnum)
-        diaplayMessage(`Please, Guess a Smaller Number`)
-    
+function resetTilt() {
+  this.style.transform = '';
 }
-
-function displayGuesses(guess){
-    userinput.value = ''
-    guessslot.innerHTML += `${guess} `
-    numguess++
-    remaning.innerHTML = `${12- numguess}`
-}
-
-function diaplayMessage(message){
-    highorlow.innerHTML = `<h3>${message}</h3>`  
-}
-
-function endGame(){
-    userinput.value = ''
-    userinput.setAttribute('disabled' , '')
- 
-
-    startover.appendChild(p)
-    playgame = false
-
-    againButton.addEventListener('click', function(){
-        location.href ="\Learining Java Script\guess_number.html"
-      })
-}
-
-
-
-
-
-
-
-
-
-
-
-
+galleryItems.forEach(item => {
+  item.addEventListener('mousemove', handleTilt);
+  item.addEventListener('mouseleave', resetTilt);
+}); 
